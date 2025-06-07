@@ -69,8 +69,8 @@ fun RaceTrackerApp() {
     var raceInProgress by remember { mutableStateOf(false) }
 
     LaunchedEffect(playerOne, playerTwo) {
-        playerOne.run()
-        playerTwo.run()
+        launch { playerOne.run() }
+        launch { playerTwo.run() }
         raceInProgress = false
     }
     RaceTrackerScreen(
