@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.media3.common.util.Log
+import kotlinx.coroutines.delay
 
 /**
  * This class represents a state holder for race participant.
@@ -61,6 +62,27 @@ class RaceParticipant(
         currentProgress = 0
     }
 }
+
+class RaceParticipantTest {
+    private val raceParticipant = RaceParticipant(
+        name = "TestRunner",
+        maxProgress = 100,
+        progressDelayMillis = 500L,
+        progressIncrement = 1,
+        initialProgress = 0
+    )
+
+    @Test
+    fun raceParticipant_RaceStarted_ProgressUpdated() = runTest {
+        val expectedProgress = 1
+        val job = launch { raceParticipant.run() }
+        advanceTimeBy(raceParticipant.progressDelayMillis)
+        runCurrent()
+        assertEquals(expectedProgress, raceParticipant.currentProgress)
+        job.cancel()
+    }
+}
+
 
 /**
  * The Linear progress indicator expects progress value in the range of 0-1. This property
